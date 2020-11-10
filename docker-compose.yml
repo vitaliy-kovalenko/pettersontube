@@ -1,0 +1,64 @@
+version: '3.7'
+
+services:
+  api:
+    build:
+      context: ./api
+    container_name: pettersontube-api
+    depends_on:
+      - pettersontube-mongo
+    ports:
+      - 3000:8080
+    volumes:
+      - ./api/server.js:/srv/server.js
+      - /srv/node_modules
+      - ./api/api:/srv/api
+      - ./api/package.json:/srv/package.json
+      - ./api/yarn.lock:/srv/yarn.lock
+      - ./gcloud/pettersontube-4106071e02a7.json:/keys/keyfile.json:ro
+    environment:
+      DB_CONNECTION_STRING: mongodb://root:root@pettersontube-mongo:27017/pettersontube?authSource=admin&w=1
+      NODE_ENV: development
+      GOOGLE_APPLICATION_CREDENTIALS: /keys/keyfile.json
+
+  web:
+    build:
+      context: ./web
+    container_name: pettersontube-web
+    volumes:
+      - ./web:/srv:rw
+      - /srv/node_modules
+      - ./web/package.json:/srv/package.json
+      - ./web/yarn.lock:/srv/yarn.lock
+    stdin_open: true
+    restart: "no"
+    ports:
+      - 3001:3000
+    environment:
+      PORT: 3000
+      REACT_APP_API_URL: http://localhost:3000
+
+  pettersontube-mongo-express:
+    image: mongo-express:latest
+    container_name: pettersontube-mongo-express
+    depends_on:
+      - pettersontube-mongo
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_SERVER: pettersontube-mongo
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: root
+
+  pettersontube-mongo:
+    image: mongo:4.1.4-xenial
+    container_name: pettersontube-mongo
+    restart: always
+    ports:
+      - 27027:27017
+    command: mongod
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: pettersontube
