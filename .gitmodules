@@ -1,0 +1,6 @@
+[submodule "api"]
+	path = api
+	url = git@github.com:vitaliy-kovalenko/pettersontube-api.git
+[submodule "web"]
+	path = web
+	url = git@github.com:vitaliy-kovalenko/pettersontube-web.git
