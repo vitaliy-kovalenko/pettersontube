@@ -15,7 +15,7 @@ services:
       - ./api/api:/srv/api
       - ./api/package.json:/srv/package.json
       - ./api/yarn.lock:/srv/yarn.lock
-      - ./gcloud/pettersontube-4106071e02a7.json:/keys/keyfile.json:ro
+      - ./gcloud/pettersontube-04b8adb4204e.json:/keys/keyfile.json:ro
     environment:
       DB_CONNECTION_STRING: mongodb://root:root@pettersontube-mongo:27017/pettersontube?authSource=admin&w=1
       NODE_ENV: development
