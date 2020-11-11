@@ -15,11 +15,12 @@ services:
       - ./api/api:/srv/api
       - ./api/package.json:/srv/package.json
       - ./api/yarn.lock:/srv/yarn.lock
-      - ./gcloud/pettersontube-04b8adb4204e.json:/keys/keyfile.json:ro
+      - ${GOOGLE_APPLICATION_CREDENTIALS_PETTERSONTUBE}:/keys/keyfile.json:ro
     environment:
       DB_CONNECTION_STRING: mongodb://root:root@pettersontube-mongo:27017/pettersontube?authSource=admin&w=1
       NODE_ENV: development
       GOOGLE_APPLICATION_CREDENTIALS: /keys/keyfile.json
+      ASSETS_BUCKET: "assets-pettersontube"
 
   web:
     build:
